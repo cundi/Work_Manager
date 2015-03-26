@@ -13,12 +13,12 @@ import json
 
 def task_list(request):
         task = Task.objects.filter()
-        context_dict = {'tasks': task}
+        context_dict = {'task': task}
         return render(request, 'task_list.html', context_dict)
 
 
 def task_detail(request, pk):
-    single_task = Task.objects.get(id=pk)
+    single_task = Task.objects.get(pk=pk)
     return render(request, 'task_detail.html', {'task': single_task})
 
 

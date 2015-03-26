@@ -29,10 +29,11 @@
                 dataType: 'json',
                 data: form.serialize(),
                 success: function(response){
-                    $(response).each(function(index, value){
-                         $("#task_title").text(value.title);
-                         $("#task_description").text(value.description);
-                        $("#task_developer").text(value.developer);
+                    $(response).each(function(){
+                        alert(this.title);
+                         $("#task_title").text(this.title);
+                         $("#task_description").text(this.description);
+                        $("#task_developer").text(this.developer);
                     });
                 }
             });
@@ -57,7 +58,7 @@
             <tbody id="t_body">
                 <tr>
                     {% for t in task %}
-                    <td><a href="{{ t.title }}" id="task_title"></a></td>
+                    <td><a href="{% url 'task_manager:task_detail' t.id %}" id="task_title"></a></td>
                     {% endfor %}
                 </tr>
             </tbody>
