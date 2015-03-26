@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block title %}
+task detail
+{% endblock %}
+
+{% block article_content %}
+    <div class="container">
+    <table class="table">
+   <caption>上下文表格布局</caption>
+   <thead>
+      <tr>
+         <th>任务名称</th>
+         <th>任务的概述</th>
+         <th>所属管理者</th>
+      </tr>
+   </thead>
+   <tbody>
+      <tr class="active">
+         <td>{{ task.title }}</td>
+          <td>{{ task.description }}</td>
+          <td>{{ task.developer }}</td>
+      </tr>
+   </tbody>
+    </table>
+    </div>
+{% endblock %}

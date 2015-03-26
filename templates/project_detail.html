@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block article_content %}
+<h3>项目名称： {{ project.title }}</h3>
+<h4>所属客户 ： {{ project.client_name }}</h4>
+
+<p>
+    对此项目的描述：<br><br>
+   <span> {{ project.description }} </span>
+</p>
+{% endblock %}

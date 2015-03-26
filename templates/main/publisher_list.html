@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block title %}
+publisher list
+{% endblock %}
+
+{% block article_content %}
+    <div class="container">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>出版社名字</th>
+                    <th>出版社地址</th>
+                    <th>出版社城市</th>
+                    <th>出版社州或者省</th>
+                    <th>出版社国家</th>
+                    <th>出版社网站地址</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if publishers %}
+                {% for p in publishers %}
+                <tr>
+                    <td>{{ p.name }}</td>
+                </tr>
+                {% endfor %}
+                {% else %}
+                <p style="font-style: oblique; color: #2aabd2; border: 10px">Has an error</p>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+    <br><br><hr>
+    <div class="container">
+        <div>
+            {% for book in book_list %}
+                The book title : {{ book.title }}
+                The book author: {{ book.publish_date|date }}
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

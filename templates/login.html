@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Please login</title>
+</head>
+<body>
+    {% if form.errors %}
+        <p class="text-warning">Your name and pwd is wrong. check it</p>
+    {% endif %}
+
+    <form role="form" class="form-horizontal" method="post" action="#">
+        {% csrf_token %}
+        {{ form }}
+        <input class="btn btn-primary" type="submit" value="login" />
+        <input type="hidden" name="next" value="{{ next }}" />
+    </form>
+
+</body>
+</html>

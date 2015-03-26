@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    task list
+{% endblock %}
+
+{% block article_content %}
+    <div class="container" id="div_containing_form">
+        <form role="form" method="get" action="{% url "task_search_ajax" %}">
+            <div class="form-group">
+                <span id="is-loading"></span>
+                <label>task id number</label>
+                <input type="text" class="form-control" name="task" id="task" placeholder="请输入非负数数字"/>
+                <button type="submit" class="btn btn-primary" id="search_btn">提交查询</button>
+            </div>
+        </form>
+    </div>
+    <br><br>
+    <div class="container">
+        <span id="search_result" style="align-content: center; font-size: 50px; color:red;"></span>
+    </div>
+
+    <script>
+        function search(form){
+            $.ajax({
+                url: '{% url "task_search_ajax" %}',
+                type: 'GET',
+                contentType: 'application/json',
+                dataType: 'json',
+                data: form.serialize(),
+                success: function(response){
+                    $(response).each(function(index, value){
+                         $("#task_title").text(value.title);
+                         $("#task_description").text(value.description);
+                        $("#task_developer").text(value.developer);
+                    });
+                }
+            });
+        }
+        $('form').on('submit', function (event) {
+            event.preventDefault();
+            var form = $(this);
+            search(form);
+        });
+    </script>
+
+    <div class="container">
+        <table class="table table-hover">
+            <caption>任务表格</caption>
+            <thead>
+            <tr>
+                <th>名称</th>
+                <th>描述</th>
+                <th>所属开发者</th>
+            </tr>
+            </thead>
+            <tbody id="t_body">
+                <tr>
+                    {% for t in task %}
+                    <td><a href="{{ t.title }}" id="task_title"></a></td>
+                    {% endfor %}
+                </tr>
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

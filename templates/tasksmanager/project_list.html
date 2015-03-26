@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block article_content %}
+
+    <div class="container-fluid">
+        <form method="post" action="{% url 'update_project' %}">
+            {% csrf_token %}
+            <label for="name">默认的复选框和单选按钮的实例</label>
+
+            <div>
+                <table class="table table-hover">
+                    <caption>悬停表格布局</caption>
+                    <thead>
+                    <tr>
+                        <th>项目名称</th>
+                        <th>项目描述</th>
+                        <th>项目所属客户</th>
+                        <th>请选择</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        {% for project in projects %}
+                        <tr><a href="{% url 'update_project' %}">{{ project.title }}</a></tr>
+                        <tr>{{ project.description }}</tr>
+                        <tr>{{ project.client_name }}</tr>
+                        {% endfor %}
+                    </tbody>
+
+                </table>
+                <div class="form-group">
+                    <div class="col-sm-offset-9 col-sm-10">
+                        <button type="submit" class="btn btn-primary">编辑所选</button>
+                        <input type="button" id="checkAll" value="全选"/>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+
+
+    <br>
+    <hr>
+    <div>
+    </div>
+    <script>
+        $('#checkAll').click(checkAll); // 全选
+        $('#checkFootball').click(checkFootball); // 单选足球
+        function checkAll() {
+            $('input [type="checkbox"][name="pj_name"]').attr("checked", true);
+            $('[name="pj_name"]:checkbox').attr("checked", true);
+        }
+
+        function checkFootball(){
+            $("[name='item']:checkbox").each(function(){
+               if(this.value == 'football')
+               {this.checked = true;}
+            });
+        }
+    </script>
+{% endblock %}
