@@ -26,11 +26,11 @@ def task_detail(request, pk):
 def task_ajax(request):
     if request.method == 'GET' and request.is_ajax():
         try:
-            form_task = request.GET.get('task', '')
+            form_task = request.GET.get('query', '')
         except ValueError:
             return HttpResponse('form task is not exist')
         try:
-            task = Task.objects.filter()
+            task = Task.objects.filter(title__icontains=form_task)
         except ValueError:
             return HttpResponse('task content is not write down yet')
         pre_json_list = []
@@ -42,7 +42,6 @@ def task_ajax(request):
             })
         recipe_list_json = json.dumps(pre_json_list)
         return HttpResponse(recipe_list_json, content_type='application/javascript')
-        # return HttpResponse(json.dumps(task), content_type='application/json')
     else:
         return HttpResponse('client ajax request is not working')
 

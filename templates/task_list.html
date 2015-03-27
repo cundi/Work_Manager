@@ -10,58 +10,94 @@
             <div class="form-group">
                 <span id="is-loading"></span>
                 <label>task id number</label>
-                <input type="text" class="form-control" name="task" id="task" placeholder="请输入非负数数字"/>
+                <input type="text" class="form-control" name="task" id="search_task" placeholder="请输入非负数数字"/>
                 <button type="submit" class="btn btn-primary" id="search_btn">提交查询</button>
             </div>
         </form>
     </div>
     <br><br>
-    <div class="container">
-        <span id="search_result" style="align-content: center; font-size: 50px; color:red;"></span>
+    <br>
+    <div class="btn-toolbar" role="toolbar">
+        <div class="container" style="font-family: Ubuntu; color: lightslategray; font-size: 20px;">
+            <p>对所选择的内容进行操作</p>
+        </div>
+        <div class="btn-group" style="margin-left: 109px;">
+            <button type="button" id="select_all" class="btn btn-success">全选</button>
+            <button type="button" id="delete_sth" class="btn btn-primary">反选</button>
+            <button class="btn btn-warning" type="button">编辑所选</button>
+            <button class="btn btn-danger" type="button">删除所选</button>
+        </div>
     </div>
 
     <script>
-        function search(form){
+
+
+
+    </script>
+
+    <script>
+        function search(form) {
             $.ajax({
                 url: '{% url "task_search_ajax" %}',
                 type: 'GET',
-                contentType: 'application/json',
+                contentType: 'application/json', //向服务器请求的类型
                 dataType: 'json',
                 data: form.serialize(),
-                success: function(response){
-                    $(response).each(function(){
-                        alert(this.title);
-                         $("#task_title").text(this.title);
-                         $("#task_description").text(this.description);
-                        $("#task_developer").text(this.developer);
+                success: function (response) {
+                    $.each(response, function (i, v) {
+                        $("#t_body").append("<tr><td>" + v.title + "</td><td>" + v.description + "</td><td>" + v.developer + "</td></tr>");
+
                     });
+                },
+                error: function () {
+                    alert('ajax request is breakdown')
                 }
             });
         }
+
         $('form').on('submit', function (event) {
             event.preventDefault();
             var form = $(this);
             search(form);
         });
+
+        $(document).ready(function(){
+            $('#search_task').typeahead({
+            ajax: {
+                url: "{% url 'task_search_ajax' %}",
+                displayField: 'title',
+                method: 'get'
+            }
+        });
+        })
     </script>
 
-    <div class="container">
-        <table class="table table-hover">
-            <caption>任务表格</caption>
-            <thead>
-            <tr>
-                <th>名称</th>
-                <th>描述</th>
-                <th>所属开发者</th>
-            </tr>
-            </thead>
-            <tbody id="t_body">
-                <tr>
-                    {% for t in task %}
-                    <td><a href="{% url 'task_manager:task_detail' t.id %}" id="task_title"></a></td>
-                    {% endfor %}
+    <div class="row">
+        <div class="col-lg-12 col-sm-12 col-xs-12 col-xxs-12">
+            <table class="table table-hover table-striped table-bordered" id="SearchQuery_Table">
+                <caption>任务表格</caption>
+                <thead id="t_head">
+                <tr style="height: 25px;">
+                    <th>名称</th>
+                    <th>描述</th>
+                    <th>所属开发者</th>
                 </tr>
-            </tbody>
-        </table>
+                </thead>
+                <tbody id="t_body"></tbody>
+            </table>
+        </div>
+    </div>
+    <div class="row" style="margin-top: 15px;">
+        <div class="col-lg-12 col-sm-12 col-xs-12 col-xxs-12">
+            <div style="font-size: 14px;">共<label style="color: #20A8D8; font-size: 14px;" id="pageCount">0</label>条记录
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12 col-sm-12 col-xs-12 col-xxs-12">
+            <div id="MainContent_AspNetPager_Msg" class="paginator">
+            </div>
+            <div class="hidden" id="CurrentPageSize">1</div>
+        </div>
     </div>
 {% endblock %}
