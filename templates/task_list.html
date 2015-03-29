@@ -4,6 +4,18 @@
     task list
 {% endblock %}
 
+
+{% block navbar %}
+    <div class="container">
+        <div class="col-ma-"
+        <ul class="nav nav-pills" role="tablist">
+        <li role="presentation" class="active"><a href="#">Home <span class="badge">42</span></a></li>
+        <li role="presentation"><a href="#">Profile</a></li>
+        <li role="presentation"><a href="#">Messages <span class="badge">3</span></a></li>
+        </ul>
+    </div>
+{% endblock %}
+
 {% block article_content %}
     <div class="container" id="div_containing_form">
         <form role="form" method="get">
@@ -32,7 +44,6 @@
             </button>
             <script>
                 $(".close").on('closed.bs.alert', function(){
-
                 })
             </script>
         </div>

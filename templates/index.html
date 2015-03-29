@@ -10,16 +10,40 @@
 
 {% block navbar %}
     <style>
+        .pager{
+            width: 876px;height: 37px;padding-top: 1px; padding-bottom: 1px; margin-left: -26px;
+        }
+        .pager li a {
+            background-color: #006dcc;
+        }
+        .pager li a:hover {
+            background-color: lightseagreen;
+        }
+        #nav_id  ul li a:hover {
+            background-color: #eea236;
+        }
+        .open>.dropdown-menu{
+            display: inline-block;
+            background-color: lightseagreen;
+        }
+        .dropdown, .nav .open>a, .nav .open>a:focus, .nav .open>a:hover{
+            background-color: lightseagreen;
+        }
+        .btn-info{
+            border-color: transparent;
+        }
+        .button.btn.btn-default{
 
-</style>
+        }
+    </style>
     <script>
-        $(document).ready(function(){
-            $(".navbar-brand, ul a").css('color','#EEEEEE');
+        $(document).ready(function () {
+            $(".navbar-brand, ul a").css('color', '#EEEEEE');
 
         });
     </script>
     <nav class="navbar navbar-fixed-top navbar-nav" style="navbutton_background_color: red;
-     background-color: lightseagreen; height: 45px;">
+     background-color: lightseagreen; height: 45px;" id="nav_id">
         <div class="container" style="height: 45px;">
             <div class="navbar-header" style="height: 45px;">
                 <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
@@ -32,11 +56,18 @@
                 <a class="navbar-brand" href="#" style="height: 45px;">Project name</a>
             </div>
             <div>
-                <form class="navbar-form navbar-right" role="search" style="margin-top: -1px; margin-bottom: 1px; height: 45px;">
+                <form class="navbar-form navbar-right" role="search"
+                      style="margin-top: -1px; margin-bottom: 1px; height: 45px;">
                     <div class="form-group">
-                        <input type="text" class="form-control" placeholder="Search">
+                        <input type="text" class="form-control" placeholder="Search" name="q">
+                        <div class="btn-group" style="margin-left: -10px;">
+                            <button class="btn btn-default" type="submit"><i class="glyphicon glyphicon-search"></i></button>
+                        </div>
                     </div>
-                    <button type="submit" class="btn btn-info navbar-btn" style="background-color: #7905BD">提交按钮</button>
+                    <button type="submit" class="btn btn-info navbar-btn"
+                            style="background-color: #7905BD" id="signup" name="signup">注册</button>
+                    <button type="submit" class="btn btn-info navbar-btn"
+                            style="background-color: #2e6da4" id="login" name="login">登录</button>
                 </form>
             </div>
             <div id="navbar" class="collapse navbar-collapse">
@@ -44,105 +75,169 @@
                     <li class="active"><a href="#">Home</a></li>
                     <li><a href="#about">About</a></li>
                     <li><a href="#contact">Contact</a></li>
+                    <li><a href="#Task">Tasks Lists</a></li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown<b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="#">Action</a></li>
+                            <li><a href="#">Another action</a></li>
+                            <li><a href="#">Something else here</a></li>
+                            <li class="divider"></li>
+                            <li><a href="#">Separated link</a></li>
+                            <li class="divider"></li>
+                        </ul>
+                    </li>
                 </ul>
             </div>
             <!-- /.nav-collapse -->
+            <!-- /drop_down_menu  -->
         </div>
         <!-- /.container -->
     </nav><!-- /.navbar -->
+{% endblock %}
 
+{% block article_content %}
     <div class="container">
         <div class="row row-offcanvas row-offcanvas-right">
             <br><br>
 
-            <div class="col-xs-12 col-sm-9">
+            <div class="col-xs-12 col-sm-9" id="accordion">
                 <p class="pull-right visible-xs">
                     <button type="button" class="btn btn-primary btn-xs" data-toggle="offcanvas">Toggle nav</button>
                 </p>
-                <div class="jumbotron">
-                    <h1>Hello, world!</h1>
+                <div class="jumbotron"
+                     style="padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px; ">
+                    <div class="container">
+                        <h1>{{ action }}</h1>
 
-                    <p>This is an example to show the potential of an offcanvas layout pattern in Bootstrap. Try some
-                        responsive-range viewport sizes to see it in action.</p>
+                        <div>
+                            {% if queryset|length > 0 %}
+                                <table>
+                                    <thead>
+                                    <tr>
+                                        <td>ID</td>
+                                        <td>Title</td>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for project in queryset %}
+                                        <tr>
+                                            <td>{{ project.pk }}</td>
+                                            <td>{{ project.title }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            {% else %}
+                                <span>No project is there.</span>
+                            {% endif %}
+                        </div>
+
+                        <p><a class="btn btn-primary btn-lg" href="#" role="button">Learn more</a></p>
+                    </div>
                 </div>
-                <div class="row">
-                    <div class="col-xs-6 col-lg-4">
-                        <h2>Heading</h2>
-
-                        <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo,
-                            tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem
-                            malesuada magna mollis euismod. Donec sed odio dui. </p>
-
-                        <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
+                <div class="panel-group" id="accordion">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a data-toggle="collapse" data-parent="#accordion"
+                                   href="#collapseOne">
+                                    点击我进行展开，再次点击我进行折叠。第 1 部分
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="collapseOne" class="panel-collapse collapse in">
+                            <div class="panel-body">
+                                Nihil anim keffiyeh helvetica, craft beer labore wes anderson
+                                cred nesciunt sapiente ea proident. Ad vegan excepteur butcher
+                                vice lomo.
+                            </div>
+                        </div>
                     </div>
-                    <!--/.col-xs-6.col-lg-4-->
-                    <div class="col-xs-6 col-lg-4">
-                        <h2>Heading</h2>
-
-                        <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo,
-                            tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem
-                            malesuada magna mollis euismod. Donec sed odio dui. </p>
-
-                        <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a data-toggle="collapse" data-parent="#accordion"
+                                   href="#collapseTwo">
+                                    点击我进行展开，再次点击我进行折叠。第 2 部分
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="collapseTwo" class="panel-collapse collapse">
+                            <div class="panel-body">
+                                Nihil anim keffiyeh helvetica, craft beer labore wes anderson
+                                cred nesciunt sapiente ea proident. Ad vegan excepteur butcher
+                                vice lomo.
+                            </div>
+                        </div>
                     </div>
-                    <!--/.col-xs-6.col-lg-4-->
-                    <div class="col-xs-6 col-lg-4">
-                        <h2>Heading</h2>
-
-                        <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo,
-                            tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem
-                            malesuada magna mollis euismod. Donec sed odio dui. </p>
-
-                        <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a data-toggle="collapse" data-parent="#accordion"
+                                   href="#collapseThree">
+                                    点击我进行展开，再次点击我进行折叠。第 3 部分
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="collapseThree" class="panel-collapse collapse">
+                            <div class="panel-body">
+                                Nihil anim keffiyeh helvetica, craft beer labore wes anderson
+                                cred nesciunt sapiente ea proident. Ad vegan excepteur butcher
+                                vice lomo.
+                            </div>
+                        </div>
+                    </div>                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a data-toggle="collapse" data-parent="#accordion"
+                                   href="#collapseFour">
+                                    点击我进行展开，再次点击我进行折叠。第 4 部分
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="collapseFour" class="panel-collapse collapse">
+                            <div class="panel-body">
+                                Nihil anim keffiyeh helvetica, craft beer labore wes anderson
+                                cred nesciunt sapiente ea proident. Ad vegan excepteur butcher
+                                vice lomo.
+                            </div>
+                        </div>
+                    </div>                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a data-toggle="collapse" data-parent="#accordion"
+                                   href="#collapseFive">
+                                    点击我进行展开，再次点击我进行折叠。第 5 部分
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="collapseFive" class="panel-collapse collapse">
+                            <div class="panel-body">
+                                Nihil anim keffiyeh helvetica, craft beer labore wes anderson
+                                cred nesciunt sapiente ea proident. Ad vegan excepteur butcher
+                                vice lomo.
+                            </div>
+                        </div>
                     </div>
-                    <!--/.col-xs-6.col-lg-4-->
-                    <div class="col-xs-6 col-lg-4">
-                        <h2>Heading</h2>
-
-                        <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo,
-                            tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem
-                            malesuada magna mollis euismod. Donec sed odio dui. </p>
-
-                        <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
-                    </div>
-                    <!--/.col-xs-6.col-lg-4-->
-                    <div class="col-xs-6 col-lg-4">
-                        <h2>Heading</h2>
-
-                        <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo,
-                            tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem
-                            malesuada magna mollis euismod. Donec sed odio dui. </p>
-
-                        <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
-                    </div>
-                    <!--/.col-xs-6.col-lg-4-->
-                    <div class="col-xs-6 col-lg-4">
-                        <h2>Heading</h2>
-
-                        <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo,
-                            tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem
-                            malesuada magna mollis euismod. Donec sed odio dui. </p>
-
-                        <p><a class="btn btn-primary" href="#" role="button">View details &raquo;</a></p>
-                    </div>
-                    <!--/.col-xs-6.col-lg-4-->
                 </div>
+
                 <!--/row-->
             </div>
             <!--/.col-xs-12.col-sm-9-->
 
             <div class="col-xs-6 col-sm-3 sidebar-offcanvas" id="sidebar">
                 <div class="list-group">
-                    <a href="#" class="list-group-item">Link</a>
-                    <a href="#" class="list-group-item">Link</a>
-                    <a href="#" class="list-group-item">Link</a>
-                    <a href="#" class="list-group-item">Link</a>
-                    <a href="#" class="list-group-item">Link</a>
-                    <a href="#" class="list-group-item">Link</a>
-                    <a href="#" class="list-group-item">Link</a>
-                    <a href="#" class="list-group-item">Link</a>
-                    <a href="#" class="list-group-item">Link</a>
-                    <a href="#" class="list-group-item">Link</a>
+                    <a href="{% url 'create:create_developer' %}" class="list-group-item">Create
+                        Developer</a>
+                    <a href="{% url 'create:create_project' %}" class="list-group-item">Create
+                        Project</a>
+                    <a href="{% url 'list:project_list' %}" class="list-group-item">项目列表</a>
+                    <a href="{% url 'create:create_supervisor' %}"
+                       class="list-group-item">创建一个管理者</a>
+                    <a href="{% url 'list:create_task' %}" class="list-group-item">创建一个任务</a>
+                    <a href="{% url 'list:list_task' %}" class="list-group-item">任务表格</a>
+                    <a href="{% url 'book:publisher_list' %}" class="list-group-item">出版社列表</a>
                 </div>
             </div>
             <!--/.sidebar-offcanvas-->
@@ -151,7 +246,9 @@
         </div>
         <!--/row-->
 
-        <ul class="pager">
+        <!--paginator start-->
+        <div class="container" style="">
+            <ul class="pager">
             <li>
                 <a href="#" aria-label="Previous">
                     <span aria-hidden="true">&laquo;前一页</span>
@@ -167,88 +264,48 @@
                     <span aria-hidden="true">&raquo;后一页</span>
                 </a>
             </li>
-        </ul>
-        <hr>
+            </ul>
+        </div>
 
+        <!--paginator end-->
+        <br><br>
+        <hr>
+        <hr>
         <footer>
             <p>&copy; Company 2014</p>
+            <address>
+                <strong>Twitter, Inc.</strong><br>
+                795 Folsom Ave, Suite 600<br>
+                San Francisco, CA 94107<br>
+                <abbr title="Phone">P:</abbr> (123) 456-7890
+            </address>
+
+            <address>
+                <strong>Full Name</strong><br>
+                <a href="mailto:#">first.last@example.com</a>
+            </address>
         </footer>
 
     </div><!--/.container-->
     <!-- End Navigation -->
 {% endblock %}
-{% block h1 %}
-    {{ block.super }} the page of index
-{% endblock %}
-<h2>
-    The index function generate page
-</h2>
 
-
-{% block article_content %}
-    <div style="border: dashed; border-color: fuchsia">
-        <h3>{{ action }}<br></h3>
-        {% if queryset|length > 0 %}
-            <table>
-                <thead>
-                <tr>
-                    <td>ID</td>
-                    <td>Title</td>
-                </tr>
-                </thead>
-                <tbody>
-                {% for project in queryset %}
-                    <tr>
-                        <td>{{ project.pk }}</td>
-                        <td>{{ project.title }}</td>
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
-        {% else %}
-            <span>No project is there.</span>
-        {% endif %}
-    </div>
-    <br>
-    <br>
-    <div class="container">
-        <div class="form-group">
-            <form method="get">
-                <label class="label">在下面进行全局查询</label>
-                <input type="search" name="global_search" placeholder="查询字符串"/>
-                <button type="submit" class="btn btn-success">确认查询</button>
-            </form>
-        </div>
-    </div>
-    <br><br>
-    <div>
-
-    <br><br>
-    <a href="{% url 'create:create_developer' %}">Create Developer</a><br><br>
-    <a href="{% url 'create:create_project' %}">Create Project</a><br><br>
-    <a href="{% url 'list:project_list' %}">项目列表</a><br><br>
-    <a href="{% url 'create:create_supervisor' %}">创建一个管理者</a><br><br>
-    <a href="{% url 'list:create_task' %}">创建一个任务</a><br><br>
-    <a href="{% url 'list:list_task' %}">任务表格</a><br><br>
-    <a href="{% url 'book:publisher_list' %}">出版社列表</a>
-    <br>
-    <br>
-    <li class="list-group-item-success">
-        <h3>Hawaiian Vacation</h3>
-        <button>Flight detail</button>
-        <div class="bg-warning">
-            <a class="visible-lg">View Boarding Pass</a>
-        </div>
-    </li>
-    <script>
-        $('.list-group-item-success').on('click', 'button', function () {
-            $.ajax('{% url "tasks_manager:project_list" %}', {
-                success: function (response) {
-                    $('.bg-warning').html(response).slideDown();
-                }
-            });
-        });
-    </script>
-{% endblock %}
+{#    <li class="list-group-item-success">#}
+{#        <h3>Hawaiian Vacation</h3>#}
+{#        <button>Flight detail</button>#}
+{#        <div class="bg-warning">#}
+{#            <a class="visible-lg">View Boarding Pass</a>#}
+{#        </div>#}
+{#    </li>#}
+{#    <script>#}
+{#        $('.list-group-item-success').on('click', 'button', function () {#}
+{#            $.ajax('{% url "tasks_manager:project_list" %}', {#}
+{#                success: function (response) {#}
+{#                    $('.bg-warning').html(response).slideDown();#}
+{#                }#}
+{#            });#}
+{#        });#}
+{#    </script>#}
+{#{% endblock %}#}
 
 

@@ -11,20 +11,12 @@ from django.utils.decorators import method_decorator
 from django.views.generic import ListView, View, TemplateView
 # Create your views here.
 
+
 def login(request):
     return render(request, 'login.html')
 
 
-
-
-
-class LoginRequiredMixin(object):
-    @classmethod
-    def as_view(cls):
-        return login_required(super(LoginRequiredMixin, cls).as_view())
-
-
-class Task_List(LoginRequiredMixin, View):
+class Task_List(View):
     tasks = Task.objects.filter()
     template_name = 'task_list.html'
 
@@ -63,7 +55,7 @@ def index(request):
     task = Task.objects.filter()
     context_dict = \
         {
-            'queryset': queryset, 'action': "Display all project", 'search': u'全局搜索',
+            'queryset': queryset, 'action': "目前开发的项目", 'search': u'全局搜索',
             'task': task,
         }
     return render(request, 'index.html', context_dict)
@@ -127,7 +119,7 @@ def create_developer(request, ):
                     if name in user['name']:
                         return HttpResponse("the name is already exist")
                 login = request.POST.get('login', '')
-                if login == '':
+                if not login:
                     return HttpResponse("your login name is blank, conform it! ")
                 password = request.POST.get('password', '')
                 if password == '':
