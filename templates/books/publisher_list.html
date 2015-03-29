@@ -18,19 +18,24 @@ publisher list
                 </tr>
             </thead>
             <tbody>
-                {% if publishers %}
-                {% for p in publishers %}
+                {% for publisher in publishers %}
                 <tr>
-                    <td>{{ p.name }}</td>
+                    <td>{{ publisher.name }}</td>
+                    <td>{{ publisher.address }}</td>
+                    <td>{{ publisher.city }}</td>
+                    <td>{{ publisher.state_province }}</td>
+                    <td>{{ publisher.country }}</td>
+                    <td>{{ publisher.website }}</td>
                 </tr>
+                {% empty %}
+                    <p style="font-style: oblique; color: #2aabd2; border: 10px">没有添加出版社或者已经被全部删除</p>
                 {% endfor %}
-                {% else %}
-                <p style="font-style: oblique; color: #2aabd2; border: 10px">Has an error</p>
-                {% endif %}
+
             </tbody>
         </table>
+        {{ now|date }}
     </div>
-    <br><br><hr>
+    <br><br>
     <div class="container">
         <div>
             {% for book in book_list %}

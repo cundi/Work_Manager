@@ -1,20 +1,35 @@
 # -*- coding:utf-8 -*-
 
 import re
-
+import json
 from django.shortcuts import render
-from django.views.generic import ListView
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from .models import Project, Task, Supervisor, Developer, UserProfile
-import json
+from django.contrib.auth.decorators import login_required, permission_required
+from django.utils.decorators import method_decorator
+from django.views.generic import ListView, View, TemplateView
 # Create your views here.
 
+def login(request):
+    return render(request, 'login.html')
 
-def task_list(request):
-        task = Task.objects.filter()
-        context_dict = {'task': task}
-        return render(request, 'task_list.html', context_dict)
+
+
+
+
+class LoginRequiredMixin(object):
+    @classmethod
+    def as_view(cls):
+        return login_required(super(LoginRequiredMixin, cls).as_view())
+
+
+class Task_List(LoginRequiredMixin, View):
+    tasks = Task.objects.filter()
+    template_name = 'task_list.html'
+
+    def get(self, request):
+        return render(request, self.template_name, {'tasks': self.tasks})
 
 
 def task_detail(request, pk):
@@ -22,17 +37,15 @@ def task_detail(request, pk):
     return render(request, 'task_detail.html', {'task': single_task})
 
 
-@csrf_exempt
 def task_ajax(request):
     if request.method == 'GET' and request.is_ajax():
         try:
             form_task = request.GET.get('query', '')
         except ValueError:
             return HttpResponse('form task is not exist')
-        try:
-            task = Task.objects.filter(title__icontains=form_task)
-        except ValueError:
-            return HttpResponse('task content is not write down yet')
+        task = Task.objects.filter(title__icontains=form_task)
+        if not task:
+            return JsonResponse({'errors': '没有查到任何内容，请检查您输入的内容'}, safe=False)
         pre_json_list = []
         for i in task:
             pre_json_list.append({
@@ -40,10 +53,10 @@ def task_ajax(request):
                 'description': i.description,
                 'developer': i.developer.supervisor.name
             })
-        recipe_list_json = json.dumps(pre_json_list)
-        return HttpResponse(recipe_list_json, content_type='application/javascript')
-    else:
+        return JsonResponse(pre_json_list, safe=False)
+    if request.method == 'POST' and request.is_ajax():
         return HttpResponse('client ajax request is not working')
+
 
 def index(request):
     queryset = Project.objects.all()
@@ -66,9 +79,9 @@ def project_detail(request, pk):
 # form_class = ProjectForm
 # success_url = '/'
 #
-#     def form_valid(self, form):
-#         form.send_email()
-#         return super(Update_Project, self).form_valid(form)
+# def form_valid(self, form):
+# form.send_email()
+# return super(Update_Project, self).form_valid(form)
 
 
 class UpdateProjectList(ListView):
@@ -109,7 +122,7 @@ def create_developer(request, ):
                 name = request.POST.get('name', '')
                 if name == '':
                     er = {"errors": "your name can't leave a blank here!"}
-                    return (er)
+                    return er
                 for user in u.values():
                     if name in user['name']:
                         return HttpResponse("the name is already exist")

@@ -6,11 +6,11 @@
 
 {% block article_content %}
     <div class="container" id="div_containing_form">
-        <form role="form" method="get" action="{% url "task_search_ajax" %}">
+        <form role="form" method="get">
             <div class="form-group">
                 <span id="is-loading"></span>
-                <label>task id number</label>
-                <input type="text" class="form-control" name="task" id="search_task" placeholder="请输入非负数数字"/>
+                <label></label><span id="search_error" style="color: red"></span>
+                <input type="text" class="form-control" name="query" id="search_task" placeholder="请输入非负数数字"/>
                 <button type="submit" class="btn btn-primary" id="search_btn">提交查询</button>
             </div>
         </form>
@@ -26,27 +26,38 @@
             <button type="button" id="delete_sth" class="btn btn-primary">反选</button>
             <button class="btn btn-warning" type="button">编辑所选</button>
             <button class="btn btn-danger" type="button">删除所选</button>
+            <br>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <script>
+                $(".close").on('closed.bs.alert', function(){
+
+                })
+            </script>
         </div>
     </div>
 
     <script>
-
-
-
     </script>
 
     <script>
         function search(form) {
             $.ajax({
-                url: '{% url "task_search_ajax" %}',
+                url: '{% url "list:task_search_ajax" %}',
                 type: 'GET',
                 contentType: 'application/json', //向服务器请求的类型
                 dataType: 'json',
                 data: form.serialize(),
                 success: function (response) {
+                    if (response.errors == '没有查到任何内容，请检查您输入的内容') {
+                        $("#search_error").html(response.errors);
+                    }
                     $.each(response, function (i, v) {
-                        $("#t_body").append("<tr><td>" + v.title + "</td><td>" + v.description + "</td><td>" + v.developer + "</td></tr>");
-
+                        $("#t_body").append("<tr><td>" + v.title + "</td><td>" + v.description +
+                        "</td><td>" + v.developer + "</td><td>" +
+                        "<input class='checkbox' type='checkbox'>"
+                        + "</td></tr>");
                     });
                 },
                 error: function () {
@@ -61,14 +72,15 @@
             search(form);
         });
 
-        $(document).ready(function(){
+
+        $(document).ready(function () {
             $('#search_task').typeahead({
-            ajax: {
-                url: "{% url 'task_search_ajax' %}",
-                displayField: 'title',
-                method: 'get'
-            }
-        });
+                ajax: {
+                    url: "{% url 'list:task_search_ajax' %}",
+                    displayField: 'title',
+                    method: 'get'
+                }
+            });
         })
     </script>
 
@@ -81,9 +93,11 @@
                     <th>名称</th>
                     <th>描述</th>
                     <th>所属开发者</th>
+                    <th>选择</th>
                 </tr>
                 </thead>
-                <tbody id="t_body"></tbody>
+                <tbody id="t_body">
+                </tbody>
             </table>
         </div>
     </div>

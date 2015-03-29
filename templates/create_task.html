@@ -6,7 +6,7 @@
 
 {% block article_content %}
     <div class="container" xmlns="http://www.w3.org/1999/html">
-        <form method="post" action="{% url 'create_task' %}">
+        <form method="post" action="{% url 'tasks_manager:create_task' %}">
             {% csrf_token %}
             <div class="form-group-sm">
                 <label>任务描述</label>

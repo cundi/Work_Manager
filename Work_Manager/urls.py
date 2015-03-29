@@ -1,24 +1,17 @@
 from django.conf.urls import patterns, include, url
 from django.contrib import admin
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = patterns('',
                        url(r'^admin/', include(admin.site.urls)),
-                       url(r'^$', 'tasksmanager.views.index',
-                           name='public_index'),
-                       url(r'^create-developer$',
-                           'tasksmanager.views.create_developer', name='create_developer'),
-                       url(r'^create-project/$',
-                           'tasksmanager.views.create_project', name='create_project'),
-                       url(r'^task', include('tasksmanager.urls', namespace='task_manager')),
-                       url(r'^create-supervisor$',
-                           'tasksmanager.views.create_supervisor', name='create_supervisor'),
-                       url(r'^create-task$',
-                           'tasksmanager.views.create_task', name='create_task'),
-                       url(r'^project_list$',
-                           'tasksmanager.views.project_list', name='project_list'),
-                       url(r'^project-detail(?P<pk>\d+)$', 'tasksmanager.views.project_detail', name='project_detail'),
-                       url(r'^task_list$', 'tasksmanager.views.task_list',
-                           name='task_list'),
-                       url(r'^task-search-ajax/$',
-                           'tasksmanager.views.task_ajax', name='task_search_ajax'),
-                       )
+                       url(r'^$', 'tasks_manager.views.index', name='public_index'),
+                       url(r'^create/', include('tasks_manager.urls', namespace='create')),
+                       url(r'^delete', include('tasks_manager.urls', namespace='delete')),
+                       url(r'^edit', include('tasks_manager.urls', namespace='edit')),
+                       url(r'^search', include('tasks_manager.urls', namespace='search')),
+                       url(r'^list-', include('tasks_manager.urls', namespace='list', app_name='tasks_manager')),
+                       url(r'^detail', include('tasks_manager.urls', namespace='detail')),
+                       url(r'^books_', include('books.urls', namespace='book')),
+                       url(r'^login', include('tasks_manager.urls', namespace='login')),
+                       ) + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

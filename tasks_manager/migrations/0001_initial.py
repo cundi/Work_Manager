@@ -57,33 +57,33 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Supervisor',
             fields=[
-                ('userprofile_ptr', models.OneToOneField(parent_link=True, auto_created=True, primary_key=True, serialize=False, to='tasksmanager.UserProfile')),
+                ('userprofile_ptr', models.OneToOneField(parent_link=True, auto_created=True, primary_key=True, serialize=False, to='tasks_manager.UserProfile')),
                 ('specialisation', models.CharField(max_length=50, verbose_name='\u7279\u522b\u6307\u6d3e\u7684\u7ba1\u7406\u8d26\u6237')),
             ],
             options={
             },
-            bases=('tasksmanager.userprofile',),
+            bases=('tasks_manager.userprofile',),
         ),
         migrations.CreateModel(
             name='Developer',
             fields=[
-                ('userprofile_ptr', models.OneToOneField(parent_link=True, auto_created=True, primary_key=True, serialize=False, to='tasksmanager.UserProfile')),
-                ('supervisor', models.ForeignKey(verbose_name='\u6b64\u5f00\u53d1\u8005\u7684\u7ba1\u7406\u8005\u662f\uff1f', to='tasksmanager.Supervisor')),
+                ('userprofile_ptr', models.OneToOneField(parent_link=True, auto_created=True, primary_key=True, serialize=False, to='tasks_manager.UserProfile')),
+                ('supervisor', models.ForeignKey(verbose_name='\u6b64\u5f00\u53d1\u8005\u7684\u7ba1\u7406\u8005\u662f\uff1f', to='tasks_manager.Supervisor')),
             ],
             options={
             },
-            bases=('tasksmanager.userprofile',),
+            bases=('tasks_manager.userprofile',),
         ),
         migrations.AddField(
             model_name='task',
             name='developer',
-            field=models.ForeignKey(verbose_name='\u4efb\u52a1\u6240\u5c5e\u5f00\u53d1\u8005', to='tasksmanager.Developer'),
+            field=models.ForeignKey(verbose_name='\u4efb\u52a1\u6240\u5c5e\u5f00\u53d1\u8005', to='tasks_manager.Developer'),
             preserve_default=True,
         ),
         migrations.AddField(
             model_name='task',
             name='project',
-            field=models.ForeignKey(default=None, blank=True, to='tasksmanager.Project', null=True, verbose_name='\u6240\u5c5e\u54ea\u4e2a\u9879\u76ee'),
+            field=models.ForeignKey(default=None, blank=True, to='tasks_manager.Project', null=True, verbose_name='\u6240\u5c5e\u54ea\u4e2a\u9879\u76ee'),
             preserve_default=True,
         ),
     ]

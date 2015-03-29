@@ -9,7 +9,7 @@
 
 {% block article_content %}
     <div class="container">
-        <form method="post" action="{% url 'create_project' %}">
+        <form method="post" action="{% url 'tasks_manager:create_project' %}">
             {% csrf_token %}
             <div class="form-group">
                 <label for="title">project title</label>

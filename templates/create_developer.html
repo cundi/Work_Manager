@@ -30,14 +30,14 @@ Create Developer
 
             $("input#name").blur(function(){
                 var n = $("#name").val();
-                $.post("{% url 'create_developer' %}", {'name': n}, function(){
+                $.post("{% url 'tasks_manager:create_developer' %}", {'name': n}, function(){
                     alert('works')
             });
         });
         </script>
     </div>
     <div class="biankuang">
-          <form method="post" action="{% url 'create_developer' %}">
+          <form method="post" action="{% url 'tasks_manager:create_developer' %}">
             {% csrf_token %}
             <table>
                 <tr>

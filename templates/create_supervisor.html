@@ -11,7 +11,7 @@
 {% block article_content %}
 
     <div class="container">
-        <form method="post" action="{% url 'create_supervisor' %}">
+        <form method="post" action="{% url 'tasks_manager:create_supervisor' %}">
             {% csrf_token %}
             <div class="form-group">
                 <label for="spv_name">管理者名字</label>

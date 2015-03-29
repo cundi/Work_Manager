@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/1.7/ref/settings/
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
-
+PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.7/howto/deployment/checklist/
@@ -36,7 +36,8 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'tasksmanager',
+    'tasks_manager',
+    'books',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -53,6 +54,22 @@ ROOT_URLCONF = 'Work_Manager.urls'
 
 WSGI_APPLICATION = 'Work_Manager.wsgi.application'
 
+LOGIN_REDIRECT_URL = '/books/profile/'
+
+LOGIN_URL = '/books/login/'
+
+LOGOUT_URL = '/books/logout/'
+
+# password storage algorithm
+PASSWORD_HASHERS = (
+    'django.contrib.auth.hashers.BCryptSHA256PasswordHasher',
+    'django.contrib.auth.hashers.BCryptPasswordHasher',
+    'django.contrib.auth.hashers.PBKDF2PasswordHasher',
+    'django.contrib.auth.hashers.PBKDF2SHA1PasswordHasher',
+    'django.contrib.auth.hashers.SHA1PasswordHasher',
+    'django.contrib.auth.hashers.MD5PasswordHasher',
+    'django.contrib.auth.hashers.CryptPasswordHasher',
+)
 
 # Database
 # https://docs.djangoproject.com/en/1.7/ref/settings/#databases
