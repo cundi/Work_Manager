@@ -29,7 +29,7 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('title', models.CharField(max_length=100)),
                 ('publication_date', models.DateField()),
-                ('authors', models.ManyToManyField(to='books.Author')),
+                ('authors', models.ManyToManyField(to='accounts.Author')),
             ],
             options={
             },
@@ -54,7 +54,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='book',
             name='publisher',
-            field=models.ForeignKey(to='books.Publisher'),
+            field=models.ForeignKey(to='accounts.Publisher'),
             preserve_default=True,
         ),
     ]

@@ -2,26 +2,90 @@
 
 import re
 import json
-from django.shortcuts import render
-from django.http import HttpResponse, JsonResponse
-from django.views.decorators.csrf import csrf_exempt
+from django.shortcuts import render, render_to_response
+from django.http import HttpResponse, JsonResponse, HttpResponseRedirect
+from django.core.urlresolvers import reverse_lazy
+# from django.views.decorators.csrf import csrf_exempt
 from .models import Project, Task, Supervisor, Developer, UserProfile
-from django.contrib.auth.decorators import login_required, permission_required
-from django.utils.decorators import method_decorator
-from django.views.generic import ListView, View, TemplateView
+# from django.contrib.auth.decorators import login_required, permission_required
+# from django.contrib.auth import authenticate, login, logout
+# from django.utils.decorators import method_decorator
+from django.views.generic import ListView, View
+# from Work_Manager.utils import anti_resubmit
 # Create your views here.
 
+try:
+    from functools import wraps
+except ImportError:
+    from django.utils.functional import wraps  # Python 2.4 fallback.
+import random
+from django.conf import settings
+from django.utils.decorators import available_attrs
+from hashlib import md5 as md5_constructor
 
-def login(request):
-    return render(request, 'login.html')
+if hasattr(random, 'SystemRandom'):
+    randrange = random.SystemRandom().randrange
+else:
+    randrange = random.randrange
+_MAX_CSRF_KEY = 18446744073709551616L     # 2 << 63
 
 
-class Task_List(View):
+def _get_new_submit_key():
+    return md5_constructor("%s%s" % (randrange(0, _MAX_CSRF_KEY), settings.SECRET_KEY)).hexdigest()
+
+
+def anti_resubmit(page_key=''):
+    def decorator(view_func):
+        @wraps(view_func, assigned=available_attrs(view_func))
+        def _wrapped_view(request, *args, **kwargs):
+            if request.method == 'GET':
+                request.session['%s_submit' % page_key] = _get_new_submit_key()
+                print 'session:' + request.session.get('%s_submit' % page_key)
+            elif request.method == 'POST':
+                old_key = request.session.get('%s_submit' % page_key, '')
+                if old_key == '':
+                    return HttpResponseRedirect(reverse_lazy('public_index'))
+                request.session['%s_submit' % page_key] = ''
+            return view_func(request, *args, **kwargs)
+        return _wrapped_view
+    return decorator
+
+
+def login_required():
+    pass
+
+
+# @anti_resubmit(page_key='user_login')
+def user_login(request):
+    login_status = []
+    if request.method == 'POST':
+        try:
+            m = UserProfile.objects.get(login=request.POST['login_name'])
+            if m.password == request.POST['login_password']:
+                request.session['user_id'] = m.id
+                login_status.append('allow_login')
+                return HttpResponseRedirect(reverse_lazy('accounts:user_profile'))
+        except UserProfile.DoesNotExist:
+            return HttpResponse("your username and password didn't match.")
+    else:
+        return render(request, 'accounts/login.html', )
+
+
+def user_logout(request):
+    try:
+        del request.session['user_id']
+    except KeyError:
+        pass
+    return HttpResponseRedirect(reverse_lazy('public_index'))
+
+
+def user_profile(request):
+    return render(request, 'user_profile.html')
+
+
+def task_list(request):
     tasks = Task.objects.filter()
-    template_name = 'task_list.html'
-
-    def get(self, request):
-        return render(request, self.template_name, {'tasks': self.tasks})
+    return render(request, 'task_list.html', {'tasks':tasks})
 
 
 def task_detail(request, pk):
@@ -37,10 +101,11 @@ def task_ajax(request):
             return HttpResponse('form task is not exist')
         task = Task.objects.filter(title__icontains=form_task)
         if not task:
-            return JsonResponse({'errors': '没有查到任何内容，请检查您输入的内容'}, safe=False)
+            return JsonResponse({'errors': '没有查到任何内容，请检查您输入的内容是否为task的名称'}, safe=False)
         pre_json_list = []
         for i in task:
             pre_json_list.append({
+                'id': i.id,
                 'title': i.title,
                 'description': i.description,
                 'developer': i.developer.supervisor.name
@@ -48,6 +113,10 @@ def task_ajax(request):
         return JsonResponse(pre_json_list, safe=False)
     if request.method == 'POST' and request.is_ajax():
         return HttpResponse('client ajax request is not working')
+
+
+def task_delete(request):
+    pass
 
 
 def index(request):
@@ -66,16 +135,6 @@ def project_detail(request, pk):
     return render(request, 'project_detail.html', {'project': project})
 
 
-# class Update_Project(FormView):
-# template_name = 'project_list.html'
-# form_class = ProjectForm
-# success_url = '/'
-#
-# def form_valid(self, form):
-# form.send_email()
-# return super(Update_Project, self).form_valid(form)
-
-
 class UpdateProjectList(ListView):
     model = Project
     context_object_name = 'projects'
@@ -85,18 +144,19 @@ def create_project(request):
     input_name = ['title', 'description', 'client_name']
     projects = Project.objects.all()
     context_dict = {'projects': projects}
+    errors = []
     if request.POST:
         for x in input_name:
             if x in request.POST:
                 title = request.POST.get('title', '')
                 if title == '':
-                    return HttpResponse(u'项目名称不能为空')
+                    errors.append('title is not allow leaving a blank')
                 description = request.POST.get('description', '')
                 client_name = request.POST.get('client_name', '')
                 new_project = Project(
                     title=title, description=description, client_name=client_name)
                 new_project.save()
-                return HttpResponse(u'添加项目已经保存')
+                return render(request, 'create_project', {'errors': errors})
     else:
         return render(request, 'create_project.html', context_dict)
 

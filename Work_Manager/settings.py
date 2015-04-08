@@ -37,7 +37,8 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'tasks_manager',
-    'books',
+    'accounts',
+    'photo_gallery',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -54,11 +55,11 @@ ROOT_URLCONF = 'Work_Manager.urls'
 
 WSGI_APPLICATION = 'Work_Manager.wsgi.application'
 
-LOGIN_REDIRECT_URL = '/books/profile/'
+LOGIN_REDIRECT_URL = '/profile/'
 
-LOGIN_URL = '/books/login/'
+LOGIN_URL = '/login_user/'
 
-LOGOUT_URL = '/books/logout/'
+LOGOUT_URL = '/logout/'
 
 # password storage algorithm
 PASSWORD_HASHERS = (
@@ -105,3 +106,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static', 'static_root')
 STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static', 'static_files'),)
 
 TEMPLATE_DIRS = (os.path.join(BASE_DIR, 'templates'),)
+
+# MEDIA_ROOT = os.path.join(BASE_DIR, 'static', 'static_root')
+#
+# MEDIA_URL = '/static/'
