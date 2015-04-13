@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Forum</title>
+    {% load staticfiles %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/forum.css' %}">
+</head>
+
+<body>
+<div id="container">
+    <div class="text-center">
+        <div id="userinfo">
+            {% if user and not user.is_anonymous %}
+            Logged in as {{ user.username }}.
+{#            <a href="{% url 'auth:logout' %}?next={{ request.path }}">Logout</a>#}
+            {% else %}
+{#            Not logged in.<a href="{% url 'social:begin' 'google-oauth2'%}?next={{ request.path }}">Login with your Google account.</a>#}
+            {% endif %}
+        </div>
+    </div>
+{% block content %}
+{% endblock %}
+
+<div class="fineprint">These are not the droid you are looking for.</div>
+</div>
+</body>
+</html>

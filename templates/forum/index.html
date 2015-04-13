@@ -1,0 +1,31 @@
+{% extends "forum_headerfooter.html" %}
+
+{% block content %}
+
+
+{% if user.is_authenticated %}
+<h3> Create a new thread </h3>
+<div>
+<form action="{% url 'forum:newthread' %}" method="post" id="newthread">
+    {% csrf_token %}
+    <input type="text" name="title" size="80"/>
+    <input type="Submit"/>
+<textarea rows="15" cols="90" name="body" form="newthread"></textarea>
+</form>
+
+</div>
+<h3>Current Threads:</h3>
+{% endif %}
+
+
+
+<div class="threadlist">
+{% for thread in threads %}
+    <div>
+        <a href="{% url 'forum:detail' thread.slug %}">{{ thread.title }}</a>
+    </div>
+{% endfor %}
+</div>
+
+
+{% endblock %}

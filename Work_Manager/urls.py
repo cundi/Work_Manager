@@ -13,5 +13,5 @@ urlpatterns = patterns('',
                        url(r'^list-', include('tasks_manager.urls', namespace='list', app_name='tasks_manager')),
                        url(r'^detail', include('tasks_manager.urls', namespace='detail')),
                        url(r'^accounts', include('tasks_manager.urls', namespace='accounts')),
-                       url(r'^photo', include('photo_gallery.urls', namespace='photo')),
+                       url(r'^forum', include('forum.urls', namespace='forums')),
                        ) + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

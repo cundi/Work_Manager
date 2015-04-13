@@ -38,7 +38,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'tasks_manager',
     'accounts',
-    'photo_gallery',
+    'forum',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -60,6 +60,9 @@ LOGIN_REDIRECT_URL = '/profile/'
 LOGIN_URL = '/login_user/'
 
 LOGOUT_URL = '/logout/'
+
+# auth user
+AUTH_USER_MODEl = 'accounts.WorkUseProfile'
 
 # password storage algorithm
 PASSWORD_HASHERS = (
